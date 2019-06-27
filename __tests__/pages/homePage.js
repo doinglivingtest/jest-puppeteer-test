@@ -10,12 +10,11 @@ class HomePage {
 
     async searchFor(word) {
         let idSearchIcon = 'search-button';
-        //await this.page.click('div[id="search-button"]');
-        await this.page.evaluate((idSearchIcon) => document.getElementById(idSearchIcon).click(), idSearchIcon);
-        await this.page.waitForSelector('#search-input-field');
-        await this.page.screenshot({path: 'screenshot.png'});
-        await this.page.type('input[id=search-input-field]', word);
-        await this.page.evaluate((idSearchIcon) => document.getElementById(idSearchIcon).click(), idSearchIcon);
+        //await this.page.evaluate((idSearchIcon) => document.getElementById(idSearchIcon).click(), idSearchIcon);
+        await this.page.click('input[id=search-input-field]');
+        //await this.page.waitForSelector('#search-input-field');
+        await this.page.keyboard.type(word);
+        await this.page.keyboard.press('Enter');
     }
 
 }

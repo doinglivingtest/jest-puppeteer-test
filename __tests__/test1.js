@@ -6,12 +6,16 @@ describe(
   'Home Page - Check if error message is displayed on search result',
   () => {
     let page
-    beforeAll(async () => {
+    beforeEach(async () => {
       page = await global.__BROWSER__.newPage()
+      //We should set the screen size due to puppeteer open the browser in 800x600 by default
+      const override = Object.assign(page.viewport(), {width: 1366});
+      await page.setViewport(override);
       await page.goto('http://www.cnn.com/')
+      await page.waitForNavigation({ waitUntil: 'networkidle0' })
     }, timeout)
 
-    afterAll(async () => {
+    afterEach(async () => {
       await page.close()
     })
 
@@ -22,16 +26,16 @@ describe(
       await homePage.searchFor('NFL');
       const resultsPage = new ResultsPage(page);
       expect(await resultsPage.checkIfErrorExist()).not.toBe('true');
-    }, 30000)
+    })
 
     it('should show error message on search result page', async () => {
       //let text = await page.evaluate(() => document.body.textContent)
       //expect(text).toContain('google')
       const homePage = new HomePage(page);
-      await homePage.searchFor('NFL');
+      await homePage.searchFor('NFLFAKE');
       const resultsPage = new ResultsPage(page);
       expect(await resultsPage.checkIfErrorExist()).toBeTruthy();
-    }, 30000)
+    })
   },
   timeout
 )
