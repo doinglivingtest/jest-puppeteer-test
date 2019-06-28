@@ -1,4 +1,4 @@
-const timeout = 14000
+const timeout = 15000
 const HomePage = require('./pages/homePage');
 const ResultsPage = require('./pages/resultsPage');
 
@@ -12,7 +12,6 @@ describe(
       const override = Object.assign(page.viewport(), {width: 1366});
       await page.setViewport(override);
       await page.goto('http://www.cnn.com/')
-      await page.waitForNavigation({ waitUntil: 'networkidle0' })
     }, timeout)
 
     afterEach(async () => {
@@ -20,17 +19,13 @@ describe(
     })
 
     it('should not show error message on search result page', async () => {
-      //let text = await page.evaluate(() => document.body.textContent)
-      //expect(text).toContain('google')
       const homePage = new HomePage(page);
       await homePage.searchFor('NFL');
       const resultsPage = new ResultsPage(page);
-      expect(await resultsPage.checkIfErrorExist()).not.toBe('true');
+      expect(await resultsPage.checkIfErrorExist()).toBe(false);
     })
 
     it('should show error message on search result page', async () => {
-      //let text = await page.evaluate(() => document.body.textContent)
-      //expect(text).toContain('google')
       const homePage = new HomePage(page);
       await homePage.searchFor('NFLFAKE');
       const resultsPage = new ResultsPage(page);
